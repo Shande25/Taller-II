@@ -1,7 +1,8 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button, ImageBackground } from 'react-native';
 import { ButtonComponent } from '../components/ButtonComponent';
+import { PRIMARY_COLOR } from '../commons/Color';
 
 interface Props extends StackScreenProps<any,any>{}
 
@@ -22,7 +23,8 @@ export const InicioSeccion = ({navigation}:Props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Iniciar Sesión</Text>
+   
+      <Text style={styles.title}>Login</Text>
 
       <Image style={styles.image} source={{uri: 'https://cdn-icons-png.flaticon.com/128/9133/9133681.png'}} />
 
@@ -50,7 +52,7 @@ export const InicioSeccion = ({navigation}:Props) => {
           secureTextEntry
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleRegistro}>
+        <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate('Medica')}>
           <Text style={styles.buttonText}>Iniciar</Text>
         </TouchableOpacity>
 
@@ -71,7 +73,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#711DB0',
+    backgroundColor: PRIMARY_COLOR,
   },
   title: {
     fontSize: 50,
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
     top: '2%',
   },
   bienvenida: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: 'bold',
     top: '4%',
     textAlign: 'center',
@@ -131,13 +133,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   final: {
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: 'bold',
     top: '3%',
     textAlign: 'center',
     color: 'white',
     marginBottom: 10,
     marginHorizontal: 20,
+    width:'100%'
   },
   buttonRegr: {
     backgroundColor: 'white',

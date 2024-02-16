@@ -31,11 +31,11 @@ export const Home = ({navigation}:Props) => {
               <View style={styles.fixToText}>
                 <ButtonComponent
                   title="Registrarse"
-                  onPress={()=>navigation.navigate('Registrarse')}
+                  onPress={()=>navigation.navigate('Registrase')}
                 />
                 <ButtonComponent
                   title="Iniciar Sesion"
-                  onPress={()=>navigation.navigate('creen2')}
+                  onPress={()=>navigation.navigate('InicioSeccion')}
                 />
               </View>
             </View>
