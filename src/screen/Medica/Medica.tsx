@@ -46,12 +46,13 @@ export const Medica = () => {
         stock:item.stock-quantity}
       : item);
       setProductsState(updateStock)
+      addProduct(idProducto,quantity)
   }
-  const addProduct=(idProduct:number,quantity:number)=>{
-    const product=productsState.find((item)=>item.id == idProduct)
+    const addProduct=(idProduct:number,quantity:number)=>{
+      const product=productsState.find((item)=>item.id == idProduct)
 
-    if(!product){
-       return;
+      if(!product){
+        return;
     }
     const newCar : Car={
       id:product.id,
