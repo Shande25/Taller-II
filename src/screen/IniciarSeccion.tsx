@@ -1,155 +1,151 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Button, ImageBackground } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ImageBackground } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ButtonComponent } from '../components/ButtonComponent';
 import { PRIMARY_COLOR } from '../commons/Color';
 
-interface Props extends StackScreenProps<any,any>{}
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+}
 
-export const InicioSeccion = ({navigation}:Props) => {
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [email, setEmail] = useState('');
+interface Props extends StackScreenProps<any, any> {}
+
+export const InicioSesion = ({navigation}: Props) => {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [estadoCivil, setEstadoCivil] = useState('soltero');
-  const [fechaNacimiento, setFechaNacimiento] = useState('');
-  const [colorFavorito, setColorFavorito] = useState('#000000');
   const [registroExitoso, setRegistroExitoso] = useState(false);
 
-  const handleRegistro = () => {
-    
-    setRegistroExitoso(true);
+  const users: User[] = [
+    { id: 1, username: 'VFlores', email: 'vflores@gmail.com', password: '123456' },
+    { id: 2, username: 'Viviana', email: 'flores@gmail.com', password: '1234567' },
+    { id: 3, username: 'Hernan', email: 'flores@gmail.com', password: '1234567' },
+    { id: 4, username: 'Patrick', email: 'flores@gmail.com', password: '1234567' },
+    { id: 5, username: 'Flores', email: 'vflores@gmail.com', password: '123456' },
+  ];
+
+  const handleLogin = () => {
+    const user = users.find(user => user.username === username && user.password === password);
+    if (user) {
+      setRegistroExitoso(true);
+      navigation.navigate('Medica');
+    } else {
+      setRegistroExitoso(false);
+    }
   };
 
   return (
-    <View style={styles.container}>
-   
-      <Text style={styles.title}>Login</Text>
+    <SafeAreaView style={styles.container}>
+      <ImageBackground
+        style={{flex: 1}}
+        source={{
+          uri: 'https://img.freepik.com/vector-gratis/antecedentes-medicos-limpios_53876-119280.jpg',
+        }}>
+        <View style={styles.container1}>
+          <Image style={styles.logo} source={{uri: 'https://cdn-icons-png.flaticon.com/128/9133/9133681.png'}} />
+          <Text style={styles.title}>Iniciar Sesión</Text>
 
-      <Image style={styles.image} source={{uri: 'https://cdn-icons-png.flaticon.com/128/9133/9133681.png'}} />
+          <View style={styles.formContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Usuario"
+              value={username}
+              onChangeText={setUsername}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Contraseña"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
 
-      <Text style={styles.bienvenida}>¡Estamos emocionados de verte!{'\n'}Ingresa para explorar y disfrutar de todas las funciones.</Text>
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+              <Text style={styles.buttonText}>Iniciar Sesión</Text>
+            </TouchableOpacity>
 
-      <View style={styles.inicio}>
-        <TextInput
-          style={styles.entrada}
-          placeholder="Ingrese Su Usuario"
-          value={nombre}
-          onChangeText={setNombre}
-        />
-        <TextInput
-          style={styles.entrada}
-          placeholder="Ingrese Su Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-        />
-        <TextInput
-          style={styles.entrada}
-          placeholder="Ingrese Su Contraseña"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+            {registroExitoso ? (
+              <Text style={styles.successMessage}>¡Inicio de sesión exitoso!</Text>
+            ) : (
+              <Text style={styles.errorMessage}>Credenciales incorrectas. Intente de nuevo.</Text>
+            )}
+          </View>
 
-        <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate('Medica')}>
-          <Text style={styles.buttonText}>Iniciar</Text>
-        </TouchableOpacity>
-
-        {registroExitoso && (
-          <Text style={styles.mensaje}>¡Cargando Sesión!</Text>
-        )}
-      </View>
-      <Text style={styles.final}>¿Nuevo por aquí?{'\n'}¡Regístrate para explorar todas las funciones y hacer de tu experiencia algo único! ¡Bienvenido a FarmaSwift!</Text>
-      <ButtonComponent title='Registrarse'  onPress={handleRegistro}/>
-
-        <ButtonComponent title='Regresar'onPress={()=>navigation.navigate('Home')}/>
-    </View>
+          <ButtonComponent title='Regresar' onPress={() => navigation.navigate('Home')} />
+        </View>
+      </ImageBackground>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  container1: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: PRIMARY_COLOR,
+    padding: 20,
   },
   title: {
-    fontSize: 50,
-    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#573F27',
   },
-  inicio: {
+  formContainer: {
+    width: '80%',
     justifyContent: 'center',
-    borderColor: 'aqua',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 10,
     padding: 20,
-    top: '3%',
   },
-  entrada: {
+  input: {
     height: 40,
-    width: 300,
-    borderColor: 'white',
+    width: '100%',
+    borderColor: '#573F27',
     borderWidth: 1,
-    marginBottom: 10,
+    marginBottom: 20,
     paddingLeft: 10,
-    backgroundColor: 'white',
-    textAlign: 'center',
+    borderRadius: 5,
   },
   button: {
-    backgroundColor: 'white',
-    padding: 10,
+    backgroundColor: '#573F27',
+    paddingVertical: 10,
+    paddingHorizontal: 30,
     borderRadius: 5,
-    alignItems: 'center',
-  },
-  buttonReg: {
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    height: 40,
-    width: 300,
-    marginVertical: '9%',
   },
   buttonText: {
-    color: 'black',
+    color: 'white',
     fontSize: 16,
+    fontWeight: 'bold',
   },
-  mensaje: {
-    color: 'green',
-    marginTop: 10,
+  error: {
+    color: 'red',
+    marginTop: 20,
   },
   image: {
     width: 100,
     height: 100,
-    top: '2%',
+    marginBottom: 20,
   },
-  bienvenida: {
-    fontSize: 17,
-    fontWeight: 'bold',
-    top: '4%',
+  successMessage: {
+    color: 'green',
+    marginTop: 10,
     textAlign: 'center',
-    color: 'white',
-    marginBottom: 10,
-    marginHorizontal: 20,
   },
-  final: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    top: '3%',
+  errorMessage: {
+    color: 'red',
+    marginTop: 10,
     textAlign: 'center',
-    color: 'white',
-    marginBottom: 10,
-    marginHorizontal: 20,
-    width:'100%'
+  },logo: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
   },
-  buttonRegr: {
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-    height: 40,
-    width: 150,
-    marginVertical: '3%',
-  },
-
 });

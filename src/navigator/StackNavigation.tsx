@@ -1,8 +1,9 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { Home } from '../screen/Home';
-import { InicioSeccion } from '../screen/IniciarSeccion';
+import {  InicioSesion } from '../screen/IniciarSeccion';
 import { Registro } from '../screen/Registro';
 import { Medica } from '../screen/Medica/Medica';
+import { PRIMARY_COLOR } from '../commons/Color';
 
 
 
@@ -11,13 +12,16 @@ const Stack = createStackNavigator();
 export const StackNavigation =()=> {
   return (
     <Stack.Navigator screenOptions={{
-      headerShown:false
-    }}>
+      cardStyle:{
+          backgroundColor:PRIMARY_COLOR
+      }
+  }}
+      >
       
-      <Stack.Screen name="Home"  component={Home} />
-      <Stack.Screen name="InicioSeccion" component={InicioSeccion} />
-      <Stack.Screen name="Registrase" component={Registro} />
-      <Stack.Screen name="Medica"  component={Medica} />
+      <Stack.Screen name="Home" options={{headerShown:false}} component={Home} />
+      <Stack.Screen name="InicioSeccion"options={{headerShown:false}} component={InicioSesion} />
+      <Stack.Screen name="Registrase"options={{headerShown:false}} component={Registro} />
+      <Stack.Screen name="Medica" options={{headerShown:false}} component={Medica} />
       
     </Stack.Navigator>
   );

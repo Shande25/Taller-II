@@ -1,165 +1,169 @@
 import React, { useState } from 'react';
 import { Image, Modal, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native';
-
 import { Product } from '../Medica';
-import { PRIMARY_COLOR, BODY_COLOR, INPUT_COLOR, ERROR_COLOR } from '../../../commons/Color';
-// import Icon from 'react-native-vector-icons/MaterialIcons';
+import { PRIMARY_COLOR, BODY_COLOR, ERROR_COLOR } from '../../../commons/Color';
 
-
-interface Props{
+interface Props {
     product: Product;
     isVisible: boolean;
-    changeVisible: ()=>void;
-    handlerChangeStockProduct:(idProducto: number, quantity: number)=>void;
+    changeVisible: () => void;
+    handlerChangeStockProduct: (idProducto: number, quantity: number) => void;
 }
 
-export const ModalMedica = ({product, isVisible, changeVisible, handlerChangeStockProduct}:Props) => {
-
-    //Hook para tomar el tamaño de la pantalla
-    const {width}=useWindowDimensions();
-    //Hook para determinar la cantidad del producto
+export const ModalMedica = ({ product, isVisible, changeVisible, handlerChangeStockProduct }: Props) => {
+    const { width } = useWindowDimensions();
     const [quantity, setQuantity] = useState(1);
 
-    //Función para incremento de la cantidad
-    const handlerChangeQuantity=(value: number)=>{
-        setQuantity(quantity+value)
+    const handlerChangeQuantity = (value: number) => {
+        setQuantity(quantity + value);
     }
 
-    //Función para agregar el producto - actualizar stock
-    const handlerAddProduct=()=>{
-        handlerChangeStockProduct(product.id, quantity)
-        //Cerramos modal
-        changeVisible()
+    const handlerAddProduct = () => {
+        handlerChangeStockProduct(product.id, quantity);
+        setQuantity(1)
+        changeVisible();
     }
-    
+
     return (
         <Modal visible={isVisible} animationType='fade' transparent={true}>
             <View style={styles.root}>
-                <View style={{width: width*0.80, ...styles.content}}>
-                    <View style={styles.header}>          
-                        <Text style={styles.title}>{product.name}  -  ${product.price.toFixed(2)}</Text>
-                        <View style={styles.iconClose}>
-                            {/* <Icon name={'cancel'} size={20} color={PRIMARY_COLOR} onPress={changeVisible}/> */}
-                        </View>
-                    </View> 
-                    <View style={styles.image}>
+                <View style={{ width: width * 0.9, ...styles.content }}>
+                    <View style={styles.header}>
+                        <Text style={styles.title}>{product.name}</Text>
+                        <TouchableOpacity style={styles.iconClose} onPress={changeVisible}>
+                            <Text style={styles.iconText}>X</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.imageContainer}>
                         <Image
-                            source={{
-                                uri: product.pathImage
-                            }}
-                            style={{width:200, height:200}}/>
-                    </View>  
+                            source={{ uri: product.pathImage }}
+                            style={styles.image} />
+                    </View>
                     {
-                        (product.stock == 0)
-                        ? <Text style={styles.textStock}>Producto agotado!</Text>
-                        :
-                        <View>
-                            <View style={styles.quantityContainer}>
-                                <TouchableOpacity style={styles.buttonQuantity}
-                                    onPress={()=>handlerChangeQuantity(-1)}
-                                    disabled={quantity == 1}>
-                                    <Text style={styles.buttonQuantityText}>-</Text>
+                        (product.stock === 0)
+                            ? <Text style={styles.textStock}>Producto agotado!</Text>
+                            :
+                            <View>
+                                <View style={styles.quantityContainer}>
+                                    <TouchableOpacity style={styles.buttonQuantity}
+                                        onPress={() => handlerChangeQuantity(-1)}
+                                        disabled={quantity === 1}>
+                                        <Text style={styles.buttonQuantityText}>-</Text>
+                                    </TouchableOpacity>
+                                    <Text style={styles.textQuantity}>{quantity}</Text>
+                                    <TouchableOpacity style={styles.buttonQuantity}
+                                        onPress={() => handlerChangeQuantity(1)}
+                                        disabled={quantity === product.stock}>
+                                        <Text style={styles.buttonQuantityText}>+</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.containerTotalPrice}>
+                                    <Text style={styles.textTotalPrice}>Total: ${(product.price * quantity).toFixed(2)}</Text>
+                                </View>
+                                <TouchableOpacity style={styles.buttonCar} onPress={handlerAddProduct}>
+                                    <Text style={styles.buttonCarText}>Agregar al Carrito</Text>
                                 </TouchableOpacity>
-                                <Text style={styles.textQuantity}>{quantity}</Text>
-                                <TouchableOpacity style={styles.buttonQuantity}
-                                    onPress={()=>handlerChangeQuantity(1)}
-                                    disabled={quantity == product.stock}>
-                                    <Text style={styles.buttonQuantityText}>+</Text>
-                                </TouchableOpacity>
-                            </View>   
-                            <View style={styles.containerTotalPrice}>
-                                <Text style={styles.textQuantity}>Total: ${(product.price*quantity).toFixed(2)}</Text>
                             </View>
-                            <TouchableOpacity style={styles.buttonCar} onPress={handlerAddProduct}>
-                                <Text style={styles.buttonCarText}>Agregar Carrito</Text>
-                            </TouchableOpacity>
-                        </View>
-                    } 
+                    }
                 </View>
             </View>
         </Modal>
     );
 };
 
-const styles=StyleSheet.create({
-    root:{
+const styles = StyleSheet.create({
+    root: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.5)',
     },
-    content:{
+    content: {
         padding: 20,
         backgroundColor: BODY_COLOR,
-        borderRadius: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    header:{
-        flexDirection: 'row',
-        borderBottomColor: '#ccc',
-        borderBottomWidth: 1,
-        borderStyle: 'solid',
-        padding: 10
-    },
-    iconClose:{
-        flex: 1,
-        alignItems: 'flex-end'
-    },
-    title:{
-        fontSize: 17,
-        fontWeight: 'bold',
-        color: PRIMARY_COLOR
-    },
-    image:{
-        alignItems: 'center'
-    },
-    quantityContainer:{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    buttonQuantity:{
-        width: 50,
-        height: 50,
-        backgroundColor: PRIMARY_COLOR,
-        margin: 15,
-        borderRadius: 25,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    buttonQuantityText:{
-        color: BODY_COLOR,
-        fontSize: 20,
-        fontWeight: 'bold'
-    },
-    textQuantity:{
-        fontSize: 20,
-        color: PRIMARY_COLOR
-    },
-    buttonCar:{
-        backgroundColor: ERROR_COLOR,
-        marginTop: 15,
+        borderRadius: 20,
         alignItems: 'center',
-        paddingVertical: 10,
-        borderRadius: 7
     },
-    buttonCarText:{
-        color: BODY_COLOR,
-        fontWeight: 'bold'
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
     },
-    containerTotalPrice:{
-        alignItems: 'center'
-    },
-    textStock:{
-        fontSize: 19,
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
         color: PRIMARY_COLOR,
-        textAlign: 'center'
-    }
+    },
+    iconClose: {
+        backgroundColor: ERROR_COLOR,
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    iconText: {
+        color: BODY_COLOR,
+        fontWeight: 'bold',
+        fontSize: 18,
+    },
+    imageContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    image: {
+        width: 200,
+        height: 200,
+        borderRadius: 10,
+    },
+    quantityContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    buttonQuantity: {
+        backgroundColor: PRIMARY_COLOR,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 10,
+    },
+    buttonQuantityText: {
+        color: BODY_COLOR,
+        fontWeight: 'bold',
+        fontSize: 18,
+    },
+    textQuantity: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    containerTotalPrice: {
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    textTotalPrice: {
+        fontSize: 18,
+        color: PRIMARY_COLOR,
+        fontWeight: 'bold',
+    },
+    buttonCar: {
+        backgroundColor: PRIMARY_COLOR,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+    },
+    buttonCarText: {
+        color: BODY_COLOR,
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    textStock: {
+        fontSize: 18,
+        color: PRIMARY_COLOR,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
 });
